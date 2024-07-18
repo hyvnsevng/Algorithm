@@ -10,4 +10,4 @@ for test_case in range(1, 11):
     answer = wall[-1]-wall[0]
 
 
-    print(f"#{test_case} {answer}")
+    print(f"#{test_case} {answer}!")
