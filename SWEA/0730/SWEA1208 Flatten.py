@@ -30,7 +30,7 @@ def find_max(arr):
 
 import sys
 
-sys.stdin = open('input.txt')
+sys.stdin = open('0731/input.txt')
 
 # Testcase 수
 T = 10
