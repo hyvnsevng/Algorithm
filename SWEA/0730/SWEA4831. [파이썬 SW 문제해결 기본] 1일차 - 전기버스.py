@@ -1,3 +1,4 @@
+
 import sys
 
 sys.stdin = open('4831_input.txt')
@@ -16,6 +17,7 @@ for tc in range(1, T+1):
         busstop[i] = 1
 
     i = 0
+
     ans = 0
     while i+K < N:
         # print(busstop[i+K:i:-1])
