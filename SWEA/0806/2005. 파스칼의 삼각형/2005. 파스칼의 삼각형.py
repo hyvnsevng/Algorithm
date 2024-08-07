@@ -30,4 +30,4 @@ for tc in range(1, T+1):
 # pascal = [[1] * x for x in range(1, n + 1)]
 #
 # for i in range(n):
-#     print(*pascal[i])
+#     print(*pascal)
