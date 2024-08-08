@@ -6,15 +6,22 @@ def game(matrix, turn):
     print(turn)
     while turn:
         play = turn.pop()
+        j = 1
         for i in range(8):
-            nrow1 = play[0] + dr[i]*2
-            ncol1 = play[1] + dc[i]*2
-            nrow2 = play[0] + dr[i]
-            ncol2 = play[1] + dc[i]
             player = play[2]
-            if 0 <= nrow1 < n and 0 <= ncol1 < n and matrix[nrow2][ncol2] == 1+(player%2) and matrix[nrow1][ncol1] == player:
-                matrix[nrow1][ncol1] = player
-                matrix[nrow2][ncol2] = player
+            change = []
+            while True:
+                nrow = play[0] + j * dr[i]
+                ncol = play[1] + j * dc[i]
+                if not(0 <= nrow < n and 0 <= ncol < n):
+                    break
+                if matrix[nrow][ncol] == 1+(player%2):
+                    change.append([nrow, ncol])
+                    j += 1
+                elif j>1 and matrix[nrow][ncol] == player:
+                    for coor in change:
+                        matrix[coor[0]][coor[1]] = player
+                    break
 
     black = 0
     white = 0

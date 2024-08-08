@@ -7,13 +7,12 @@ def find_path(data):
 
     # 모든 연결 노드 탐색
     while stack:
-        v = stack.pop() # 스택의 top 요소
+        v = stack.pop()     # 스택의 top 요소
         # v의 다음 노드 확인
         for i in data[v]:
-            if i:   # 필요한가?
-                stack.append(i) # 다음 노드 큐에 넣기
-                if i == 99: # 도착지점일 경우 1 반환
-                    return 1
+            stack.append(i)     # 다음 노드 큐에 넣기
+            if i == 99:     # 도착지점일 경우 1 반환
+                return 1
 
     # 모두 탐색했는데 도착지점에 못 갔으면 0 반환
     return 0
