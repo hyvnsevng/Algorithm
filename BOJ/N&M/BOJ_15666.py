@@ -5,16 +5,14 @@ def func(x, arr):
             answer.add(arr)
         return
     for i in range(n):
-        if not visited[i]:
-            visited[i] = True
+        if not x:
+            func(x+1, (lst[i], ))
+        elif arr[-1] <= lst[i]:
             func(x+1, arr+(lst[i], ))
-            visited[i] = False
 
 
 n, m = map(int, input().split())
 lst = list(map(int, input().split()))
-lst.sort()
-visited = [False]*(n+1)
 answer = set()
 func(0, tuple())
 answer = sorted(answer)
