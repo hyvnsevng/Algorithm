@@ -1,32 +1,19 @@
 function findKevinBacon(i, edges) {
-  let result = 0;
-  for (let j = 0; j < n; j++) {
-    if (i !== j) {
-      const visited = Array(n).fill(false);
-      result += bfs(i + 1, j + 1, 0, edges, visited);
-    }
-  }
-  return result;
+  const visited = Array(n).fill(10000);
+  visited[i] = 0;
+  const kevinBacon = dfs(i + 1, 0, edges, visited);
+  return kevinBacon.reduce((a, b) => a + b);
 }
 
-function bfs(member1, member2, cost, edges, visited) {
-  const queue = Array();
-  queue.push([member1, 0]);
-  visited[member1 - 1] = true;
-
-  while (queue.length > 0) {
-    const [member, dist] = queue[0];
-    queue.shift();
-    if (member === member2) {
-      return dist;
+function dfs(member, depth, edges, visited) {
+  edges[member - 1].forEach((friend) => {
+    if (visited[friend - 1] > depth + 1) {
+      visited[friend - 1] = depth + 1;
+      visited = dfs(friend, depth + 1, edges, visited);
     }
-    edges[member - 1].forEach((friend) => {
-      if (visited[friend - 1] === false) {
-        queue.push([friend, dist + 1]);
-        visited[friend - 1] = true;
-      }
-    });
-  }
+  });
+
+  return visited;
 }
 
 const fs = require("fs");
