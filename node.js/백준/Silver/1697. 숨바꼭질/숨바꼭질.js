@@ -4,7 +4,7 @@ const [n, m] = fs
   .toString()
   .split(" ");
 
-const dp = Array(100001).fill(1e9);
+const visited = Array(100001).fill(1e9);
 let destination = [Number(n)];
 let cost = 0;
 while (cost < 100001) {
@@ -13,8 +13,8 @@ while (cost < 100001) {
   }
   const tmp = new Array();
   destination.forEach((e) => {
-    if (e < 100001 && dp[e] > cost) {
-      dp[e] = cost;
+    if (e < 100001 && visited[e] > cost) {
+      visited[e] = cost;
       if (e > 0) {
         tmp.push(e - 1);
       }
