@@ -11,7 +11,7 @@ def union(u, v):
 def find(x):
     parent = parents[x]
     while parent != parents[parent]:
-        parent = find(parent)
+        parent = parents[parent]
     
     return parent
 
