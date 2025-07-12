@@ -9,11 +9,10 @@ def union(u, v):
 
 
 def find(x):
-    parent = parents[x]
-    while parent != parents[parent]:
-        parent = parents[parent]
+    if parents[x] != x:
+        parents[x] = find(parents[x])
     
-    return parent
+    return parents[x]
 
 
 n, m = map(int, input().split())
