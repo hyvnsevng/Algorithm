@@ -14,16 +14,18 @@ for (idx; idx < T + 1; idx++) {
     .split(" ")
     .map((e) => Number(e));
 
-  const from = Array(10000).fill(-1),
-    how = Array(10000).fill("");
+  const visited = Array(10000).fill(false);
+  visited[a] = true;
 
-  const q = [a];
-  from[a] = a;
+  const q = [[a, ""]];
 
   while (q.length) {
-    const num = q.shift();
+    const [num, curr] = q.shift();
 
-    if (num === b) break;
+    if (num === b) {
+      console.log(curr);
+      break;
+    }
 
     for (const [next, cmd] of [
       [D(num), "D"],
@@ -31,14 +33,12 @@ for (idx; idx < T + 1; idx++) {
       [L(num), "L"],
       [R(num), "R"],
     ]) {
-      if (from[next] === -1) {
-        from[next] = num;
-        how[next] = how[num] + cmd;
-        q.push(next);
+      if (visited[next] === false) {
+        q.push([next, curr + cmd]);
+        visited[next] = true;
       }
     }
   }
-  console.log(how[b]);
 }
 
 function D(n) {
