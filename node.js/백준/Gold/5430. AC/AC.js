@@ -1,4 +1,3 @@
-
 function AC(p, arr) {
   let rev = false,
     delStart = 0,
@@ -28,14 +27,11 @@ const input = fs.readFileSync(filePath).toString().split("\n");
 let idx = 0;
 const T = Number(input[idx++]);
 for (let tc = 0; tc < T; tc++) {
-  const p = input[idx++].split("");
+  const p = input[idx++];
   const n = Number(input[idx++]);
   let arr =
     input[idx++] === "[]"
       ? []
-      : input[idx - 1]
-          .slice(1, input[idx - 1].length - 1)
-          .split(",")
-          .map((e) => Number(e));
+      : input[idx - 1].slice(1, input[idx - 1].length - 1).split(",");
   console.log(AC(p, arr));
 }
