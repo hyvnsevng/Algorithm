@@ -6,7 +6,7 @@ const input = fs.readFileSync(filePath).toString().split("\n");
 let idx = 0;
 const T = Number(input[idx++]);
 
-while (idx < 2 * T + 1) {
+for (let tc = 0; tc < T; tc++) {
   const [n, k] = input[idx++].split(" ").map((e) => Number(e));
   const prices = input[idx++].split(" ").map((e) => Number(e));
 
@@ -30,7 +30,7 @@ function LIS(prices, n, k) {
 
       lis[end] = price;
     }
-    
+
     if (lis.length >= k) return 1;
   }
   return 0;
