@@ -1,37 +1,37 @@
-# 백준 1238번 파티
-import heapq
-INF = 1E9
+from heapq import heappush, heappop
+MAX_DIST = 100000
 
-
-def dijkstra(start, destination):
-    distance = [INF]*(n+1)
-    distance[start] = 0
+def dijkstra(start, end):
     hq = []
-    heapq.heappush(hq, (0, start))
+    heappush(hq, (0, start))
+    distances = [MAX_DIST]*(n+1)
+    distances[start] = 0
+    
     while hq:
-        dist, now = heapq.heappop(hq)
-        if dist > distance[now]:
+        dist, node = heappop(hq)
+        
+        if dist > distances[node]:
             continue
 
-        for next, next_dist in edges[now]:
-            cost = dist + next_dist
-            if cost < distance[next]:
-                distance[next] = cost
-                heapq.heappush(hq, (cost, next))
-
-    return distance[destination]
+        for cost, next in roads[node]:
+            if dist + cost < distances[next]:
+                distances[next] = dist + cost
+                heappush(hq, (dist + cost, next))
+                
+    return distances[end]
 
 
 n, m, x = map(int, input().split())
-edges = [[] for _ in range(n+1)]
+
+roads = [list() for _ in range(n+1)]
 for _ in range(m):
-    a, b, t = map(int, input().split())
-    edges[a].append([b, t])
+    s, e, t = map(int, input().split())
+    roads[s].append((t, e))
 
-answer = 0
+max_time = 0
+
 for i in range(1, n+1):
-    time = dijkstra(i, x) + dijkstra(x, i)
-    if time > answer:
-        answer = time
+    i_time = dijkstra(i, x) + dijkstra(x, i)
+    max_time = max(i_time, max_time)
 
-print(answer)
+print(max_time)
