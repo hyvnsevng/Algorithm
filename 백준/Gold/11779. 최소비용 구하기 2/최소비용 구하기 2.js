@@ -1,4 +1,3 @@
-
 function push(x) {
   let i = heap.length;
   heap.push(x);
@@ -78,4 +77,4 @@ while (node !== start) {
 }
 console.log(distance[end]);
 console.log(ans.length);
-console.log(...ans.reverse());
+console.log(ans.reverse().join(' '));
