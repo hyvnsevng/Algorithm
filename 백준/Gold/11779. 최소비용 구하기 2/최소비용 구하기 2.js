@@ -1,57 +1,35 @@
-class Heap {
-  constructor() {
-    this.heap = [];
+function push(elem) {
+  heap.push(elem);
+  let idx = heap.length - 1;
+  let parentIdx = Math.floor((idx - 1) / 2);
+  while (heap[parentIdx] > heap[idx]) {
+    [heap[parentIdx], heap[idx]] = [heap[idx], heap[parentIdx]];
+    idx = parentIdx;
+    parentIdx = Math.floor((idx - 1) / 2);
   }
+}
 
-  size() {
-    return this.heap.length;
+function pop() {
+  if (heap.length == 1) {
+    return heap.pop();
   }
-
-  push(elem) {
-    this.heap.push(elem);
-    this._bubbleUp();
-  }
-
-  pop() {
-    if (this.size() == 1) {
-      return this.heap.pop();
+  const res = heap[0];
+  heap[0] = heap.pop();
+  let idx = 0,
+    leftIdx = idx * 2 + 1,
+    rightIdx = idx * 2 + 2,
+    childIdx;
+  while (heap[leftIdx] && heap[leftIdx] < heap[idx]) {
+    childIdx = leftIdx; // 왼쪽 자식 노드가 더 작다고 가정
+    if (heap[rightIdx] && heap[childIdx] < heap[rightIdx]) {
+      childIdx = rightIdx;
     }
-    const res = this.heap[0];
-    this.heap[0] = this.heap.pop();
-    this._bubbleDown();
-    return res;
+    [heap[childIdx], heap[idx]] = [heap[idx], heap[childIdx]];
+    idx = childIdx;
+    leftIdx = idx * 2 + 1;
+    rightIdx = idx * 2 + 1;
   }
-
-  _swap(idx1, idx2) {
-    [this.heap[idx1], this.heap[idx2]] = [this.heap[idx2], this.heap[idx1]];
-  }
-
-  _bubbleUp() {
-    let idx = this.size() - 1;
-    let parentIdx = Math.floor((idx - 1) / 2);
-    while (this.heap[parentIdx] > this.heap[idx]) {
-      this._swap(parentIdx, idx);
-      idx = parentIdx;
-      parentIdx = Math.floor((idx - 1) / 2);
-    }
-  }
-
-  _bubbleDown() {
-    let idx = 0,
-      leftIdx = idx * 2 + 1,
-      rightIdx = idx * 2 + 2,
-      childIdx;
-    while (this.heap[leftIdx] && this.heap[leftIdx] < this.heap[idx]) {
-      childIdx = leftIdx; // 왼쪽 자식 노드가 더 작다고 가정
-      if (this.heap[rightIdx] && this.heap[childIdx] < this.heap[rightIdx]) {
-        childIdx = rightIdx;
-      }
-      this._swap(childIdx, idx);
-      idx = childIdx;
-      leftIdx = idx * 2 + 1;
-      rightIdx = idx * 2 + 1;
-    }
-  }
+  return res;
 }
 
 const fs = require("fs");
@@ -71,11 +49,11 @@ for (const line of input) {
   edges[s].push([e, c]);
 }
 
-const heap = new Heap();
+const heap = [];
 const distance = Array(n + 1).fill(10e9);
 const path = Array(n + 1).fill(-1);
 heap.push([0, start]);
-while (heap.size()) {
+while (heap.length) {
   const [dist, node] = heap.pop();
   if (distance[node] < dist) continue;
   for (const [nxt, cost] of edges[node]) {
