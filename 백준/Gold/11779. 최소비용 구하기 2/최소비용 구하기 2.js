@@ -1,40 +1,3 @@
-function push(x) {
-  let i = heap.length;
-  heap.push(x);
-
-  while (i > 0) {
-    const p = (i - 1) >> 1;
-    if (heap[p] <= x) break;
-    heap[i] = heap[p];
-    i = p;
-  }
-  heap[i] = x;
-}
-
-function pop() {
-  const n = heap.length;
-  if (n === 0) return undefined;
-
-  const res = heap[0];
-  const x = heap.pop();
-  if (n === 1) return res;
-
-  const m = heap.length;
-  let i = 0;
-  const half = m >> 1;
-
-  while (i < half) {
-    let l = i * 2 + 1;
-    let r = l + 1;
-    let c = r < m && heap[r] < heap[l] ? r : l;
-    if (heap[c] >= x) break;
-    heap[i] = heap[c];
-    i = c;
-  }
-  heap[i] = x;
-  return res;
-}
-
 const fs = require("fs");
 const filePath = process.platform == "linux" ? "/dev/stdin" : "input.txt";
 const input = fs.readFileSync(filePath).toString().trim().split("\n");
@@ -53,17 +16,54 @@ for (const line of input) {
 }
 
 const heap = [];
+
+function push(elem) {
+  heap.push(elem);
+  if (heap.length === 1) return;
+  let idx = heap.length - 1;
+  let parentIdx = Math.floor((idx - 1) / 2);
+  while (idx > 0) {
+    const parentIdx = (idx - 1) >> 1;
+    if (heap[parentIdx][0] <= heap[idx][0]) break;
+    [heap[parentIdx], heap[idx]] = [heap[idx], heap[parentIdx]];
+    idx = parentIdx;
+  }
+}
+
+function pop() {
+  if (heap.length == 1) {
+    return heap.pop();
+  }
+  const res = heap[0];
+  heap[0] = heap.pop();
+  let idx = 0,
+    leftIdx = idx * 2 + 1,
+    rightIdx = idx * 2 + 2,
+    childIdx;
+  while (heap[leftIdx] && heap[leftIdx][0] < heap[idx][0]) {
+    childIdx = leftIdx; // 왼쪽 자식 노드가 더 작다고 가정
+    if (heap[rightIdx] && heap[childIdx][0] < heap[rightIdx][0]) {
+      childIdx = rightIdx;
+    }
+    [heap[childIdx], heap[idx]] = [heap[idx], heap[childIdx]];
+    idx = childIdx;
+    leftIdx = idx * 2 + 1;
+    rightIdx = idx * 2 + 1;
+  }
+  return res;
+}
+
 const distance = Array(n + 1).fill(10e9);
 const path = Array(n + 1).fill(-1);
-heap.push([0, start]);
+push([0, start]);
 while (heap.length) {
-  const [dist, node] = heap.pop();
+  const [dist, node] = pop();
   if (distance[node] < dist) continue;
   for (const [nxt, cost] of edges[node]) {
     const w = cost + dist;
     if (w < distance[nxt]) {
       path[nxt] = node;
-      heap.push([w, nxt]);
+      push([w, nxt]);
       distance[nxt] = w;
     }
   }
@@ -77,4 +77,4 @@ while (node !== start) {
 }
 console.log(distance[end]);
 console.log(ans.length);
-console.log(ans.reverse().join(' '));
+console.log(ans.reverse().join(" "));
