@@ -36,9 +36,9 @@ function pop() {
   }
   const res = heap[0];
   heap[0] = heap.pop();
-  let idx = 0,
-    leftIdx = idx * 2 + 1,
-    rightIdx = idx * 2 + 2,
+  let idx = 0;
+  let leftIdx = (idx << 1) + 1,
+    rightIdx = (idx << 1) + 2,
     childIdx;
   while (heap[leftIdx] && heap[leftIdx][0] < heap[idx][0]) {
     childIdx = leftIdx; // 왼쪽 자식 노드가 더 작다고 가정
