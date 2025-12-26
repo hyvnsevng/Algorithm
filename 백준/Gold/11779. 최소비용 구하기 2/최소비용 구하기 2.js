@@ -1,34 +1,38 @@
-function push(elem) {
-  heap.push(elem);
-  let idx = heap.length - 1;
-  let parentIdx = Math.floor((idx - 1) / 2);
-  while (heap[parentIdx] > heap[idx]) {
-    [heap[parentIdx], heap[idx]] = [heap[idx], heap[parentIdx]];
-    idx = parentIdx;
-    parentIdx = Math.floor((idx - 1) / 2);
+
+function push(x) {
+  let i = heap.length;
+  heap.push(x);
+
+  while (i > 0) {
+    const p = (i - 1) >> 1;
+    if (heap[p] <= x) break;
+    heap[i] = heap[p];
+    i = p;
   }
+  heap[i] = x;
 }
 
 function pop() {
-  if (heap.length == 1) {
-    return heap.pop();
-  }
+  const n = heap.length;
+  if (n === 0) return undefined;
+
   const res = heap[0];
-  heap[0] = heap.pop();
-  let idx = 0,
-    leftIdx = idx * 2 + 1,
-    rightIdx = idx * 2 + 2,
-    childIdx;
-  while (heap[leftIdx] && heap[leftIdx] < heap[idx]) {
-    childIdx = leftIdx; // 왼쪽 자식 노드가 더 작다고 가정
-    if (heap[rightIdx] && heap[childIdx] < heap[rightIdx]) {
-      childIdx = rightIdx;
-    }
-    [heap[childIdx], heap[idx]] = [heap[idx], heap[childIdx]];
-    idx = childIdx;
-    leftIdx = idx * 2 + 1;
-    rightIdx = idx * 2 + 1;
+  const x = heap.pop();
+  if (n === 1) return res;
+
+  const m = heap.length;
+  let i = 0;
+  const half = m >> 1;
+
+  while (i < half) {
+    let l = i * 2 + 1;
+    let r = l + 1;
+    let c = r < m && heap[r] < heap[l] ? r : l;
+    if (heap[c] >= x) break;
+    heap[i] = heap[c];
+    i = c;
   }
+  heap[i] = x;
   return res;
 }
 
