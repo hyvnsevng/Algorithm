@@ -7,7 +7,7 @@ int n, m;
 pair<int ,int> red, blue, RD, BD;
 int dr[4] = {1, -1, 0, 0}, dc[4] = {0, 0, 1, -1};
 vector<vector<pair<bool, bool>>> visited;
-int minVal = 1e9;
+int minVal = 20;
 
 void backtracking(vector<vector<int>> maze, pair<int, int> red, pair<int, int> blue, int depth) {
     if (depth >= minVal) return;
@@ -73,5 +73,5 @@ int solution(vector<vector<int>> maze) {
     }
     
     backtracking(maze, red, blue, 0);
-    return minVal == 1e9 ? 0 : minVal;
+    return minVal == 20 ? 0 : minVal;
 }
