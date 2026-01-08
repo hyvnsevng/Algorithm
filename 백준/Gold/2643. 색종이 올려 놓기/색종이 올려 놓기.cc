@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 #include <algorithm>
 
 using namespace std;
@@ -9,27 +8,31 @@ int main() {
     cin.tie(nullptr);
 
     int N; cin >> N;
-    vector<pair<int,int>> P(N);
+    pair<int,int> P[N];
+
     for (auto &p: P) {
         int a,b; cin >> a >> b;
         if (a > b) swap(a,b);
-        p = {a,b};
+        p.first = a;
+        p.second = b;
     }
+    
+    sort(P, P+N);
 
-    sort(P.begin(), P.end(), [](auto &x, auto &y){
-        if (x.first != y.first) return x.first > y.first;
-        return x.second > y.second;
-    });
-
-    vector<int> dp(N, 1);
+    int dp[N];
+    for (int i=0;i<N;i++){
+        dp[i] = 1;
+    }
+    
     int ans = 1;
     for (int i=0;i<N;i++){
         for (int j=0;j<i;j++){
-            if (P[i].first <= P[j].first && P[i].second <= P[j].second) {
+            if (P[i].first >= P[j].first && P[i].second >= P[j].second) {
                 dp[i] = max(dp[i], dp[j] + 1);
             }
         }
         ans = max(ans, dp[i]);
     }
+    
     cout << ans;
 }
