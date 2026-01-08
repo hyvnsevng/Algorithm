@@ -4,45 +4,32 @@
 
 using namespace std;
 
-int N, a, b;
-vector<pair<int, int>> P;
-vector<int> dp;
-
-
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
 
-    cin >> N;
-    P.resize(N);
-    dp.assign(N, 1);
-    for (int i = 0; i < N; ++i) {
-        cin >> a >> b;
-        if (b > a) {   
-            P[i].first = a;
-            P[i].second = b;
-        } else {
-            P[i].first = b;
-            P[i].second = a;
+    int N; cin >> N;
+    vector<pair<int,int>> P(N);
+    for (auto &p: P) {
+        int a,b; cin >> a >> b;
+        if (a > b) swap(a,b);
+        p = {a,b};
+    }
+
+    sort(P.begin(), P.end(), [](auto &x, auto &y){
+        if (x.first != y.first) return x.first > y.first;
+        return x.second > y.second;
+    });
+
+    vector<int> dp(N, 1);
+    int ans = 1;
+    for (int i=0;i<N;i++){
+        for (int j=0;j<i;j++){
+            if (P[i].first <= P[j].first && P[i].second <= P[j].second) {
+                dp[i] = max(dp[i], dp[j] + 1);
+            }
         }
+        ans = max(ans, dp[i]);
     }
-
-    sort(P.begin(), P.end());
-
-    for (int i = 0; i < N; ++i) {
-        a = P[i].first, b = P[i].second;
-        for (int j = i - 1; j >= 0; --j) {
-            int _a = P[j].first, _b = P[j].second;
-            if (a < _a || b < _b) continue;
-            dp[i] = max(dp[i], dp[j] + 1);
-        }
-    }
-
-    int ans = 0;
-    for (int i = 0; i < N; ++i) {
-        ans = max(dp[i], ans);
-    }
-
     cout << ans;
-}   
+}
