@@ -12,6 +12,6 @@ else:
             dp[i] = [sum(wines[:i+1]), sum(wines[:i+1]) - wines[i]]
         else:
             dp[i][0] = max(dp[i-2][0] + wines[i], dp[i-2][1] + wines[i-1] + wines[i])
-            dp[i][1] = max(dp[i-1][0], dp[i-2][0])
+            dp[i][1] = max(dp[i-1])
 
     print(max(dp[n-1]))
