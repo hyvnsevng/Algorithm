@@ -30,7 +30,7 @@ int solve(int M, int N, int K) {
     int cnt=0;
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < M; ++j) {
-            if (baechu[i][j]) cnt += dfs(i, j);
+            if (baechu[i][j]) cnt++, dfs(i, j);
         }
     }
 
