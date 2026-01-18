@@ -27,4 +27,4 @@ for t in range(T):
                             stack.append((nr, nc))
                 cnt += 1
     
-    print(cnt)
+    sys.stdout.write(str(cnt)+"\n")
