@@ -1,3 +1,6 @@
+import sys
+input = sys.stdin.readline
+
 dr = [1, 0, -1, 0]
 dc = [0, 1, 0, -1]
 T = int(input())
