@@ -1,4 +1,4 @@
-#include <iostream>
+#include <stdio.h>
 
 using namespace std;
 
@@ -23,7 +23,7 @@ int dfs(int r, int c) {
 int solve(int M, int N, int K) {
     int r, c;
     for (int i = 0; i < K; ++i) {
-        cin >> c >> r;
+        scanf("%d %d", &c, &r);
         baechu[r][c] = 1;
     }
     
@@ -38,13 +38,11 @@ int solve(int M, int N, int K) {
 }
 
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
-    int tc; cin >> tc;
+    int tc;
+    scanf("%d", &tc);
     
     while (tc--) {
-        cin >> M >> N >> K;
-        cout << solve(M, N, K) << "\n";
+        scanf("%d %d %d", &M, &N, &K);
+        printf("%d\n", solve(M, N, K));
     }
 }
