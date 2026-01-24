@@ -1,101 +1,62 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <string>
+#include <vector>
 using namespace std;
 
-static inline long long manhattan(int x, int y, int tx, int ty) {
-    return llabs(x - tx) + llabs(y - ty);
-}
+int N, M, S;
+char dungeon[60][60], id[1001];
+int dx[4] = {-1, 1, 0, 0}, dy[4] = {0, 0, -1, 1};
+string dirs = "UDLR";
+int x=0, y=0;
+vector<pair<int, int>> where[30];
+string ans;
 
-static inline void emit_moves(int &x, int &y, int tx, int ty, string &buf) {
-    while (x < tx) { buf.push_back('D'); x++; }
-    while (x > tx) { buf.push_back('U'); x--; }
-    while (y < ty) { buf.push_back('R'); y++; }
-    while (y > ty) { buf.push_back('L'); y--; }
-}
-
-static inline void flush_buf(string &buf) {
-    if (!buf.empty()) {
-        cout << buf;
-        buf.clear();
+void moveTo(int tx, int ty) {
+    for (int i = 0; i < abs(tx - x); ++i) {
+        ans += dirs[tx > x ? 1 : 0];
     }
+    for (int i = 0; i < abs(ty - y); ++i) {
+        ans += dirs[ty > y ? 3 : 2];
+    }
+    x = tx; y = ty;
 }
 
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
 
-    int N, M, Ls;
-    cin >> N >> M >> Ls;
-    vector<string> grid(N);
-    for (int i = 0; i < N; i++) cin >> grid[i];
-    string S;
-    cin >> S;
+    cin >> N >> M >> S;
 
-    array<int, 26> gcnt{}; gcnt.fill(0);
-    array<int, 26> scnt{}; scnt.fill(0);
+    int idcnts[26] = {0, };
 
-    for (int i = 0; i < N; i++)
-        for (int j = 0; j < M; j++)
-            gcnt[grid[i][j] - 'a']++;
-
-    for (char c : S) scnt[c - 'a']++;
-
-    int C = INT_MAX;
-    for (int k = 0; k < 26; k++) {
-        if (scnt[k] > 0) C = min(C, gcnt[k] / scnt[k]);
-    }
-    if (C == INT_MAX) C = 0;
-
-    vector<pair<int,int>> pos[26];
-    for (int k = 0; k < 26; k++) pos[k].reserve(gcnt[k]);
-
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < M; j++) {
-            pos[grid[i][j] - 'a'].push_back({i, j});
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < M; ++j) {
+            cin >> dungeon[i][j];
+            where[dungeon[i][j] - 'a'].push_back({i, j});
         }
     }
-    
-    array<int, 26> idx;
-    for (int k = 0; k < 26; k++) idx[k] = (int)pos[k].size();
 
-    long long L = 0;
-    int x = 0, y = 0;
-    auto idx1 = idx;
+    for (int i = 0; i < S; ++i) {cin >> id[i]; idcnts[id[i] - 'a']++;}
 
-    for (int rep = 0; rep < C; rep++) {
-        for (char ch : S) {
-            int k = ch - 'a';
-            int p = --idx1[k];
-            auto [tx, ty] = pos[k][p];
-            L += manhattan(x, y, tx, ty) + 1;
-            x = tx; y = ty;
+    int C = 2500;
+    for (int i = 0; i < 26; ++i) {
+        if (idcnts[i] > 0) {
+            C = min(C, (int)where[i].size() / idcnts[i]);
         }
     }
-    
-    L += manhattan(x, y, N - 1, M - 1);
 
-    cout << C << ' ' << L << "\n";
+    cout << C << " ";
 
-    int x2 = 0, y2 = 0;
-    auto idx2 = idx;
-
-    string buf;
-    buf.reserve(1 << 20);
-
-    for (int rep = 0; rep < C; rep++) {
-        for (char ch : S) {
-            int k = ch - 'a';
-            int p = --idx2[k];
-            auto [tx, ty] = pos[k][p];
-
-            emit_moves(x2, y2, tx, ty, buf);
-            buf.push_back('P');
-
-            if ((int)buf.size() >= (1 << 20) - 1024) flush_buf(buf);
+    int ptr[26] = {}, idx;
+    for (int t = 0; t < C; ++t) {
+        for (int i = 0; i < S; ++i) {
+            idx = id[i] - 'a';
+            auto [tx, ty] = where[idx][ptr[idx]++];
+            moveTo(tx, ty);
+            ans += "P";
         }
     }
-    emit_moves(x2, y2, N - 1, M - 1, buf);
-    flush_buf(buf);
+    moveTo(N-1, M-1);
 
-    cout << "\n";
-    return 0;
+    cout << ans.size() << "\n" << ans;
 }
