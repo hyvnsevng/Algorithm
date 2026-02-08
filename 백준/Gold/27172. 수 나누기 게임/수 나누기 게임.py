@@ -6,21 +6,18 @@ locations = [1000001 for _ in range(max_num +1)]
 for i in range(n):
     locations[arr[i]] = i
 
+arr.sort()
+
 nums = set(arr)
 score = [0 for _ in range(n)]
 
 gcd = [[] for _ in range(max_num + 1)]
-for i in sorted(nums):
+for i in arr:
     k = 2*i
     while k <= max_num:
-        gcd[k].append(i)
+        if k in nums:
+            score[locations[k]] -= 1
+            score[locations[i]] += 1 
         k += i
-    
-for i in range(n):
-    card = arr[i]
-    for num in gcd[card]:
-        if num in nums:
-            score[locations[num]] += 1
-            score[i] -= 1 
 
 print(*score)
