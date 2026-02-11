@@ -20,10 +20,10 @@ function check(t) {
 const maxA = Math.max(...arr);
 
 let [l, r] = [-1, maxA * (N - 1)];
-while (l + 1 < r) {
+while (l < r) {
   const m = Math.floor((l + r) / 2);
   if (check(m)) r = m;
-  else l = m;
+  else l = m + 1;
 }
 
-console.log(r);
+console.log(l);
