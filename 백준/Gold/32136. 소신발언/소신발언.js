@@ -6,7 +6,7 @@ const arr = input[1].split(" ").map((e) => Number(e));
 
 function check(arr, t) {
   const N = arr.length;
-  let [mini, maxi] = [0n, BigInt(N)];
+  let [mini, maxi] = [0n, BigInt(N - 1)];
   for (let j = 0; j < N; ++j) {
     const tmini = -1n * (t / BigInt(arr[j])) + BigInt(j);
     const tmaxi = t / BigInt(arr[j]) + BigInt(j);
@@ -17,7 +17,12 @@ function check(arr, t) {
   return true;
 }
 
-let [l, r] = [1n, 150000000000n];
+let maxA = 0;
+for (let i = 0; i < N; ++i) {
+  maxA = Math.max(maxA, (N - 1 - i) * arr[i], i * arr[i]);
+}
+
+let [l, r] = [1n, BigInt(maxA)];
 while (l < r) {
   const m = (l + r) >> 1n;
   if (check(arr, m)) r = m;
