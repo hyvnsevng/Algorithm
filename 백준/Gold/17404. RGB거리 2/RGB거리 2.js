@@ -16,13 +16,13 @@ for (let c = 0; c < 3; ++c) {
 
 // i번째 집
 for (let i = 1; i < n - 1; ++i) {
-  // 시작 색
-  for (let c = 0; c < 3; ++c) {
-    // 마지막 색
-    for (let lc = 0; lc < 3; ++lc) {
+  // 마지막 색
+  for (let lc = 0; lc < 3; ++lc) {
+    // 시작 색
+    const cost = costs[i][lc];
+    for (let c = 0; c < 3; ++c) {
       dp[i][c][lc] =
-        Math.min(dp[i - 1][c][(lc + 1) % 3], dp[i - 1][c][(lc + 2) % 3]) +
-        costs[i][lc];
+        Math.min(dp[i - 1][c][(lc + 1) % 3], dp[i - 1][c][(lc + 2) % 3]) + cost;
     }
   }
 }
@@ -32,10 +32,11 @@ for (let i = 0; i < 3; ++i) {
   // 첫번째 색
   for (let j = 0; j < 3; ++j) {
     if (i == j) continue;
+    const cost = costs[n - 1][i];
     ans = Math.min(
       ans,
-      dp[n - 2][j][(i + 1) % 3] + costs[n - 1][i],
-      dp[n - 2][j][(i + 2) % 3] + costs[n - 1][i],
+      dp[n - 2][j][(i + 1) % 3] + cost,
+      dp[n - 2][j][(i + 2) % 3] + cost,
     );
   }
 }
