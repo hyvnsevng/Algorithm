@@ -17,6 +17,6 @@ def dfs(num):
             dfs(nxt)
 
 
-MP = [2, 3, 5, 7]
-for p in MP:
-    dfs(p)
+monoprimes = [2, 3, 5, 7]
+for monoprime in monoprimes:
+    dfs(monoprime)
