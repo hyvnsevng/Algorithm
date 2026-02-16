@@ -1,8 +1,7 @@
 n = int(input())
-
-def dfs(num, depth, lmt):
-    # print(num)
-    if depth==lmt:
+MAX = 10**(n-1)
+def dfs(num):
+    if num // MAX:
         print(num)
         return
     
@@ -11,14 +10,13 @@ def dfs(num, depth, lmt):
         bc = (nxt**0.5)+1
         prime = 3
         while prime < bc:
-            # print(prime)
             if nxt % prime == 0:
                 break
             prime += 2
         if prime >= bc:
-            dfs(nxt, depth+1, lmt)
+            dfs(nxt)
 
 
 monoprimes = [2, 3, 5, 7]
 for monoprime in monoprimes:
-    dfs(monoprime, 1, n)
+    dfs(monoprime)
