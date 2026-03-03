@@ -2,7 +2,7 @@ const fs = require("fs");
 const input = fs.readFileSync(0, "utf8").trim().split("\n");
 
 const [L, C] = input[0].split(" ").map((e) => Number(e));
-const alphabets = input[1].split(" ");
+const alphabets = input[1].split(" ").sort();
 const ans = [];
 const vowels = "aeiou";
 
@@ -15,30 +15,18 @@ function check(str) {
   return true;
 }
 
-function dfs(pw, used, ans) {
+function dfs(pw, i) {
+  if (i > C) return;
   if (pw.length == L && check(pw)) {
     ans.push(pw);
     return;
   }
 
-  for (let i = 0; i < C; ++i) {
-    if (
-      !used[i] &&
-      alphabets[i].charCodeAt() > pw[pw.length - 1].charCodeAt()
-    ) {
-      used[i] = 1;
-      dfs(pw + alphabets[i], used, ans);
-      used[i] = 0;
-    }
-  }
+  dfs(pw + alphabets[i], i + 1);
+  dfs(pw, i + 1);
 }
 
-const used = Array(C).fill(0);
-for (let i = 0; i < C; ++i) {
-  used[i] = 1;
-  dfs(alphabets[i], used, ans);
-  used[i] = 0;
-}
+dfs("", 0);
 
 ans.sort();
 for (const pw of ans) console.log(pw);
