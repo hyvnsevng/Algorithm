@@ -9,12 +9,12 @@ class MaxHeap {
   push(val) {
     this.heap.push(val);
     let cur = this.heap.length - 1;
-    let par = Math.floor(cur / 2);
+    let par = cur >> 1;
 
     while (cur > 1 && this.heap[par] < this.heap[cur]) {
       [this.heap[par], this.heap[cur]] = [this.heap[cur], this.heap[par]];
       cur = par;
-      par = Math.floor(cur / 2);
+      par = cur >> 1;
     }
   }
 
@@ -27,8 +27,8 @@ class MaxHeap {
     let cur = 1;
 
     while (true) {
-      let left = cur * 2;
-      let right = cur * 2 + 1;
+      let left = cur << 1;
+      let right = (cur << 1) + 1;
       let target = cur;
 
       if (left < this.heap.length && this.heap[left] > this.heap[target]) target = left;
