@@ -1,76 +1,68 @@
-const fs = require('fs')
-const input = fs.readFileSync(0, 'utf-8').toString().trim().split('\n')
+const fs = require('fs');
+const input = fs.readFileSync(0, 'utf-8').toString().trim().split('\n');
 
-class Heap {
-  constructor(func = (a, b) => a-b) {
-    this.heap = [null]
-    this.func = func
+class MaxHeap {
+  constructor() {
+    this.heap = [null];
   }
 
-  size() {
-    return this.heap.length - 1
-  }
-  
-  push(v) {
-    this.heap.push(v)
-    this._bottomUp()
+  push(val) {
+    this.heap.push(val);
+    let cur = this.heap.length - 1;
+    let par = Math.floor(cur / 2);
+
+    while (cur > 1 && this.heap[par] < this.heap[cur]) {
+      [this.heap[par], this.heap[cur]] = [this.heap[cur], this.heap[par]];
+      cur = par;
+      par = Math.floor(cur / 2);
+    }
   }
 
   pop() {
-    if (this.size() == 0) return null
+    if (this.heap.length <= 1) return null;
+    if (this.heap.length === 2) return this.heap.pop();
+
     const res = this.heap[1];
-    [this.heap[1], this.heap[this.size()]] = [this.heap[this.size()], this.heap[1]]
-    this.heap.pop()
-    this._topDown()
-    return res
+    this.heap[1] = this.heap.pop();
+    let cur = 1;
+
+    while (true) {
+      let left = cur * 2;
+      let right = cur * 2 + 1;
+      let target = cur;
+
+      if (left < this.heap.length && this.heap[left] > this.heap[target]) target = left;
+      if (right < this.heap.length && this.heap[right] > this.heap[target]) target = right;
+
+      if (target === cur) break;
+      [this.heap[cur], this.heap[target]] = [this.heap[target], this.heap[cur]];
+      cur = target;
+    }
+    return res;
   }
 
-  _topDown() {
-    let parent = 1
-    const size = this.size()
-    while (1) {
-      const leftChild = parent * 2, rightChild = parent * 2 + 1
-      let candidate = parent
-      
-      if (leftChild <= size && this.func(this.heap[leftChild], this.heap[candidate]) > 0) {
-        candidate = leftChild
-      }
-      if (rightChild <= size && this.func(this.heap[rightChild], this.heap[candidate]) > 0) {
-        candidate = rightChild
-      }
-
-      if (candidate == parent) break
-      [this.heap[candidate], this.heap[parent]] = [this.heap[parent], this.heap[candidate]]
-      parent = candidate
-    }
-  }
-
-  _bottomUp() {
-    let child = this.size()
-    while (child > 1) {
-      const parent = Math.floor(child / 2)
-      if (this.func(this.heap[child], this.heap[parent]) > 0) [this.heap[parent], this.heap[child]] = [this.heap[child], this.heap[parent]]
-      child = parent
-    }
+  size() {
+    return this.heap.length - 1;
   }
 }
 
-let idx = 0
-const [N, K] = input[idx++].split(' ').map(e => Number(e))
+let line = 0;
+const [N, K] = input[line++].split(' ').map(Number);
+
 const jewels = [];
 for (let i = 0; i < N; i++) {
-  jewels.push(input[idx++].split(' ').map(Number));
+  jewels.push(input[line++].split(' ').map(Number));
 }
 
 const bags = [];
 for (let i = 0; i < K; i++) {
-  bags.push(Number(input[idx++]));
+  bags.push(Number(input[line++]));
 }
 
 jewels.sort((a, b) => a[0] - b[0]);
 bags.sort((a, b) => a - b);
 
-const pq = new Heap();
+const pq = new MaxHeap();
 let jewelIdx = 0;
 let totalValue = BigInt(0);
 
