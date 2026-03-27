@@ -22,6 +22,19 @@ bool check(vector<vector<int>> &key, vector<vector<int>> &lock, int i, int j) {
     return true;           
 }
 
+void rotate(vector<vector<int>> &key) {
+    int m = key.size();
+    vector<vector<int>> new_key (m, vector<int> (m, 0));
+    
+    for (int kr=0; kr<m; ++kr) {
+        for (int kc=0; kc<m; ++kc) {
+            new_key[kr][kc] = key[kc][m-kr-1];
+        }
+    }
+
+    key = new_key;
+}
+
 bool solution(vector<vector<int>> key, vector<vector<int>> lock) {
     
     int n = lock.size();
@@ -34,15 +47,8 @@ bool solution(vector<vector<int>> key, vector<vector<int>> lock) {
                 if (check(key, lock, i, j)) return true;
             }
         }
-        // 회전
-        vector<vector<int>> new_key (m, vector<int> (m, 0));
-        for (int kr=0; kr<m; ++kr) {
-            for (int kc=0; kc<m; ++kc) {
-                new_key[kr][kc] = key[kc][m-kr-1];
-            }
-        }
         
-        key = new_key;
+        rotate(key);
     }
     
     return false;
