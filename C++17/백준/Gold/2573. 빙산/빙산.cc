@@ -6,6 +6,8 @@ int N, M;
 int dr[4] = {1, -1, 0, 0};
 int dc[4] = {0, 0, 1, -1};
 
+int visited[301][301];
+
 struct Point { int r, c; };
 vector<Point> icebergs;
 
@@ -34,7 +36,7 @@ void melt(vector<vector<int>> &ocean) {
 
 bool bfs(vector<vector<int>> &ocean) {
     queue<pair<int, int>> q;
-    vector<vector<int>> visited (N, vector<int> (M, 0));
+    memset(visited, 0, sizeof(visited));
     int sr = icebergs[0].r;
     int sc = icebergs[0].c;
     q.push({sr, sc});
