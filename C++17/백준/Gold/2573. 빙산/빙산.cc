@@ -6,44 +6,57 @@ int N, M;
 int dr[4] = {1, -1, 0, 0};
 int dc[4] = {0, 0, 1, -1};
 
+struct Point { int r, c; };
+vector<Point> icebergs;
+
 void melt(vector<vector<int>> &ocean) {
-    vector<vector<int>> diff(N, vector<int> (M, 0));
+    vector<int> sea_count(icebergs.size());
 
-    for (int r=0; r<N; ++r) {
-        for (int c=0; c<M; ++c) {
-            int cnt = 0;
-            for (int i=0; i<4; ++i) {
-                int nr = r+dr[i];
-                int nc = c+dc[i];
-                if (nr >= 0 && nr < N && nc >= 0 && nc < M && ocean[nr][nc] == 0) {
-                    cnt++;
-                }
-            }
-            diff[r][c] = cnt;
+    for(int i = 0; i < icebergs.size(); ++i) {
+        int cnt = 0;
+        for(int d = 0; d < 4; ++d) {
+            int nr = icebergs[i].r + dr[d];
+            int nc = icebergs[i].c + dc[d];
+            if(nr >= 0  && nr < N && nc >= 0 && nc < M && ocean[nr][nc] == 0) cnt++;
         }
+        sea_count[i] = cnt;
     }
 
-    for (int r=0; r<N; ++r) {
-        for (int c=0; c<M; ++c) {
-            ocean[r][c] = max(0, ocean[r][c] - diff[r][c]);
+    vector<Point> next_icebergs;
+    for(int i = 0; i < icebergs.size(); ++i) {
+        ocean[icebergs[i].r][icebergs[i].c] = max(0, ocean[icebergs[i].r][icebergs[i].c] - sea_count[i]);
+        if(ocean[icebergs[i].r][icebergs[i].c] > 0) {
+            next_icebergs.push_back(icebergs[i]);
         }
     }
+    icebergs = next_icebergs;
 }
 
-bool dfs(int r, int c, vector<vector<int>> &ocean, vector<vector<int>> &visited) {
-    if (visited[r][c]) return false;
-    if (ocean[r][c] == 0) return false;
-    
-    visited[r][c] = 1;
+bool bfs(vector<vector<int>> &ocean) {
+    queue<pair<int, int>> q;
+    vector<vector<int>> visited (N, vector<int> (M, 0));
+    int sr = icebergs[0].r;
+    int sc = icebergs[0].c;
+    q.push({sr, sc});
+    visited[sr][sc] = 1;
 
-    for (int i=0; i<4; ++i) {
-        int nr = r+dr[i];
-        int nc = c+dc[i];
-        if (nr >= 0  && nr < N && nc >= 0 && nc < M && !visited[nr][nc] && ocean[nr][nc] > 0) {
-            dfs(nr, nc, ocean, visited);
+    int cnt = 0;
+    while (!q.empty()) {
+        pair<int, int> coor = q.front();
+        q.pop();
+        cnt++;
+
+        for (int i=0; i<4; ++i) {
+            int nr = coor.first + dr[i];
+            int nc = coor.second + dc[i];
+            if(nr >= 0  && nr < N && nc >= 0 && nc < M && !visited[nr][nc] && ocean[nr][nc] > 0) {
+                q.push({nr, nc});
+                visited[nr][nc] = 1;
+            }
         }
     }
-    return true;
+
+    return cnt == icebergs.size();
 }
 
 int solve(vector<vector<int>> &ocean) {
@@ -51,19 +64,8 @@ int solve(vector<vector<int>> &ocean) {
     while (++ans) {
         melt(ocean);
 
-        stack<int> st;
-        vector<vector<int>> visited (N, vector<int> (M, 0));
-        int cnt = 0;
-        for (int i=0; i<N; ++i) {
-            for (int j=0; j<M; ++j) {
-                if (dfs(i, j, ocean, visited)) {
-                    cnt++;
-                };
-            }   
-        }
-
-        if (cnt > 1) return ans;
-        if (cnt == 0) return 0;
+        if (icebergs.empty()) return 0;
+        if (!bfs(ocean)) return ans;
     }
 }
 
@@ -77,6 +79,7 @@ int main() {
     for (int i=0; i<N; ++i) {
         for (int j=0; j<M; ++j) {
             cin >> ocean[i][j];
+            if (ocean[i][j] > 0) icebergs.push_back({i, j});
         }
     }
 
