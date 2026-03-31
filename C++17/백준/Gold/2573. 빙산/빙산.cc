@@ -6,7 +6,8 @@ int N, M;
 int dr[4] = {1, -1, 0, 0};
 int dc[4] = {0, 0, 1, -1};
 
-int visited[301][301];
+int visited[301][301] = {{0, }, };
+int ans = 0;
 
 struct Point { int r, c; };
 vector<Point> icebergs;
@@ -36,11 +37,10 @@ void melt(vector<vector<int>> &ocean) {
 
 bool bfs(vector<vector<int>> &ocean) {
     queue<pair<int, int>> q;
-    memset(visited, 0, sizeof(visited));
     int sr = icebergs[0].r;
     int sc = icebergs[0].c;
     q.push({sr, sc});
-    visited[sr][sc] = 1;
+    visited[sr][sc] = ans;
 
     int cnt = 0;
     while (!q.empty()) {
@@ -51,9 +51,9 @@ bool bfs(vector<vector<int>> &ocean) {
         for (int i=0; i<4; ++i) {
             int nr = coor.first + dr[i];
             int nc = coor.second + dc[i];
-            if(nr >= 0  && nr < N && nc >= 0 && nc < M && !visited[nr][nc] && ocean[nr][nc] > 0) {
+            if(nr >= 0  && nr < N && nc >= 0 && nc < M && visited[nr][nc] < ans && ocean[nr][nc] > 0) {
                 q.push({nr, nc});
-                visited[nr][nc] = 1;
+                visited[nr][nc] = ans;
             }
         }
     }
@@ -62,7 +62,6 @@ bool bfs(vector<vector<int>> &ocean) {
 }
 
 int solve(vector<vector<int>> &ocean) {
-    int ans = 0;
     while (++ans) {
         melt(ocean);
 
