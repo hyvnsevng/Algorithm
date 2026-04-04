@@ -1,0 +1,18 @@
+import sys
+from bisect import bisect_left
+
+input = sys.stdin.readline
+
+n = int(input())
+arr = list(map(int, input().split()))
+lis = []
+
+for x in arr:
+    idx = bisect_left(lis, x)
+
+    if idx == len(lis):
+        lis.append(x)
+    else:
+        lis[idx] = x
+
+print(len(lis))
