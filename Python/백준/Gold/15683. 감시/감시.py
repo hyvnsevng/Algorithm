@@ -36,17 +36,9 @@ for i in range(len(cctvs)):
             nc += dc[j]
 
 
-def popcount(bit):
-    cnt = 0
-    while bit > 0:
-        bit &= bit - 1
-        cnt += 1
-    return cnt
-
-
 def solve(cctvs, depth, max_cnts, bit = 0):
     if depth == len(cctvs):
-        tmp = popcount(bit)
+        tmp = bit.bit_count()
         if max_cnts < tmp:
             return tmp
         return max_cnts
