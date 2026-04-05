@@ -35,8 +35,7 @@ for i in range(len(cctvs)):
             nr += dr[j]
             nc += dc[j]
 
-
-def backtracking(cctvs, depth, max_cnts, arr = []):
+def solve(cctvs, depth, max_cnts, arr = []):
     if depth == len(cctvs):
         ws = set()
         for i in range(depth):
@@ -49,11 +48,11 @@ def backtracking(cctvs, depth, max_cnts, arr = []):
     r, c, s = cctvs[depth]
     dir = dirs[s]
     for ds in dir:
-        res = backtracking(cctvs, depth + 1, max_cnts, arr + [ds])
+        res = solve(cctvs, depth + 1, max_cnts, arr + [ds])
         if res > max_cnts:
             max_cnts = res
     
     return max_cnts
 
 
-print(emptys - backtracking(cctvs, 0, 0))
+print(emptys - solve(cctvs, 0, 0))
