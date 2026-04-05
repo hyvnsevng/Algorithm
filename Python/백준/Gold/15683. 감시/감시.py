@@ -21,7 +21,7 @@ for i in range(n):
         elif 1 <= status <= 5:
             cctvs.append((i, j, graph[i][j]))
 
-watched = [[set() for _ in range(4)] for __ in range(len(cctvs))]
+watched = [[0] * 4 for __ in range(len(cctvs))]
 # 위부터 시계방향
 dr = [-1, 0, 1, 0]
 dc = [0, 1, 0, -1]
@@ -31,24 +31,33 @@ for i in range(len(cctvs)):
         nr, nc = r + dr[j], c + dc[j]
         while 0 <= nr < n and 0 <= nc < m and graph[nr][nc] != 6:
             if graph[nr][nc] == 0:
-                watched[i][j].add((nr, nc))
+                watched[i][j] |= 1 << (nr * m + nc)
             nr += dr[j]
             nc += dc[j]
 
-def solve(cctvs, depth, max_cnts, arr = []):
+
+def popcount(bit):
+    cnt = 0
+    while bit > 0:
+        bit &= bit - 1
+        cnt += 1
+    return cnt
+
+
+def solve(cctvs, depth, max_cnts, bit = 0):
     if depth == len(cctvs):
-        ws = set()
-        for i in range(depth):
-            for d in arr[i]:
-                ws |= watched[i][d]
-        if max_cnts < len(ws):
-            return len(ws)
+        tmp = popcount(bit)
+        if max_cnts < tmp:
+            return tmp
         return max_cnts
     
     r, c, s = cctvs[depth]
     dir = dirs[s]
     for ds in dir:
-        res = solve(cctvs, depth + 1, max_cnts, arr + [ds])
+        b = bit
+        for d in ds:
+            b |= watched[depth][d]
+        res = solve(cctvs, depth + 1, max_cnts, b)
         if res > max_cnts:
             max_cnts = res
     
