@@ -4,25 +4,21 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    public static void union(int a, int b, int[] parents) {
+    public static void union(int a, int b, int[] parents, int[] rank) {
         int pa = find(a, parents);
         int pb = find(b, parents);
 
-        if (pa < pb) parents[pb] = pa;
-        if (pa > pb) parents[pa] = pb;
+        if (rank[pa] < rank[pb]) parents[pa] = pb;
+        else if (rank[pa] > rank[pb]) parents[pb] = pa;
+        else {
+            parents[pb] = pa;
+            rank[pa]++;
+        }
     }
 
     public static int find(int x, int[] parents) {
         if (parents[x] != x) parents[x] = find(parents[x], parents);
         return parents[x];
-    }
-
-    public static void calc(int type, int a, int b, int[] parents) {
-        if (type == 0) union(a, b, parents);
-        else {
-            if (find(a, parents) == find(b, parents)) System.out.println("YES");
-            else System.out.println("NO");
-        }
     }
 
     public static void main(String[] args) throws IOException {
@@ -36,14 +32,21 @@ public class Main {
         for (int s = 0; s <= n; ++s) {
             parents[s] = s;
         }
+        int[] rank = new int[n+1];
 
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < m; ++i) {
             st = new StringTokenizer(br.readLine());
             int calc_type = Integer.parseInt(st.nextToken());
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
 
-            calc(calc_type, a, b, parents);
+            if (calc_type == 0) union(a, b, parents, rank);
+            else {
+                if (find(a, parents) == find(b, parents)) sb.append("YES\n");
+                else sb.append("NO\n");
+            }
         }
+        System.out.println(sb);
     }
 }
