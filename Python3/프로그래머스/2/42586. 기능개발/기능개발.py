@@ -18,9 +18,7 @@ def solution(progresses, speeds):
             answer.append(size)
             size = 1
             day = t_day
-        print(i, day, size, answer)
     else:
-        if size != 0:
-            answer.append(size)
+        answer.append(size)
         
     return answer
