@@ -30,42 +30,53 @@ def find_asc_diag(turn, board, n):
     return True
 
 
-def find_tictactoe(turn, board, n):
+def find_tictactoe(r, c, turn, board, n):
     # 가로or세로 찾기
-    for i in range(n):
-        if find_row(turn, board, n, i) or find_col(turn, board, n, i):
-            return 1
+    if find_row(turn, board, n, r) or find_col(turn, board, n, c):
+        return True
         
     # 대각선 찾기
     if find_desc_diag(turn, board, n) or find_asc_diag(turn, board, n):
+        return True
+    
+    return False
+    
+
+def dfs(n, board, curr, turn='O', r=-1, c=-1):
+    if r >= 0 and find_tictactoe(r, c, 'O' if turn == 'X' else 'X', curr, n):
+        for i in range(n):
+            for j in range(n):
+                if board[i][j] != curr[i][j]:
+                    return 0
+        return 1
+    
+    same = True
+    for i in range(n):
+        for j in range(n):
+            # 아직 board가 완성되지 않은 경우
+            if board[i][j] != curr[i][j]:
+                same = False
+                
+            # 현재 턴 중 가능한 경우 탐색하기
+            if board[i][j] == turn and curr[i][j] == '.':
+                same = False
+                curr[i][j] = turn
+                res = dfs(n, board, curr, 'X' if turn == 'O' else 'O', i, j)
+                
+                # board가 가능한 경우 1 반환
+                if res == 1:
+                    return 1
+                curr[i][j] = '.'
+                
+    # board가 가능한 경우 1 반환
+    if same:
         return 1
     
     return 0
-
+    
 
 def solution(board):
     n = 3
-    
-    O_cnt, X_cnt = 0, 0
-    for i in range(n):
-        for j in range(n):
-            if board[i][j] == 'O':
-                O_cnt += 1
-            elif board[i][j] == 'X':
-                X_cnt += 1
-    
-    """
-    가능한 경우
-    1. O가 X보다 1개 많고 X 빙고가 없어야 함
-    2. O가 X랑 개수가 같고 O 빙고가 없어야 함
-    """
-    if O_cnt == X_cnt + 1:
-        if find_tictactoe('X', board, n):
-            return 0
-        return 1
-    elif O_cnt == X_cnt:
-        if find_tictactoe('O', board, n):
-            return 0
-        return 1
-    
-    return 0
+    curr = [['.'] * n for _ in range(n)]
+    answer = dfs(n, board, curr)
+    return answer
