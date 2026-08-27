@@ -21,8 +21,9 @@ class Solution {
         }
         
         // 끝까지 떨어지지 않은 가격들 처리하기
-        for (Integer idx: stack) {
-            answer[idx] = n - idx - 1;
+        while (!stack.empty()) {
+            int i = stack.pop();
+            answer[i] = n - i - 1;
         }
 
         return answer;
