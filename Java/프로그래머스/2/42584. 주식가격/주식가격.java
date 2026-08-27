@@ -2,23 +2,27 @@ import java.util.Stack;
 
 class Solution {
     public int[] solution(int[] prices) {
+        
         int n = prices.length;
         int[] answer = new int[n];
-        Stack<Integer[]> stack = new Stack<>();
+        
+        Stack<Integer> stack = new Stack<>();
         for (int i = 0; i < n; i++) {
-            int price = prices[i];
-            while (stack.size() > 0 && stack.peek()[0] > price) {
-                Integer[] elem = stack.pop();
-                answer[elem[1]] = i - elem[1];
+            int price = prices[i];  // 현재 가격
+            
+            // 스택 내에서 현재 가격 이하인 시점을 모두 pop하여 answer에 기간을 저장한다. 
+            while (!stack.empty() && prices[stack.peek()] > price) {
+                Integer comparedPrice = stack.pop();
+                answer[comparedPrice] = i - comparedPrice;
             }
             
-            stack.push(new Integer[]{price, i});
+            // 현재 시점 스택에 push
+            stack.push(i);
         }
         
-        for (Integer[] elem: stack) {
-            int price = elem[0];
-            int i = elem[1];
-            answer[i] = n - i - 1;
+        // 끝까지 떨어지지 않은 가격들 처리하기
+        for (Integer idx: stack) {
+            answer[idx] = n - idx - 1;
         }
 
         return answer;
