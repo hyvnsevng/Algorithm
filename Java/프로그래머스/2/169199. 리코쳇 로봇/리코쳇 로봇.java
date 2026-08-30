@@ -2,8 +2,8 @@ import java.util.*;
 
 class Solution {
     
-    final static int[] DR = {1, -1, 0, 0};
-    final static int[] DC = {0, 0, 1, -1};
+    private static final int[] DR = {1, -1, 0, 0};
+    private static final int[] DC = {0, 0, 1, -1};
     
     public int solution(String[] board) {
         int answer = 0;
