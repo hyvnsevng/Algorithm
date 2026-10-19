@@ -10,50 +10,55 @@ def get_dist_same_floor(sr, sc, er, ec, grid, n, m):
     q.append((sr, sc, 0))
     visited = [[False] * m for _ in range(n)]
     visited[sr][sc] = True
+    
     while q:
         r, c, dist = q.popleft()
+        # 목표지점 도달한 경우 dist 반환
         if r == er and c == ec:
             return dist
         for i in range(4):
             nr, nc = r + DR[i], c + DC[i]
             if 0 <= nr < n and 0 <= nc < m and not visited[nr][nc] and grid[nr][nc] in ('.', '@'):
                 q.append((nr, nc, dist + 1))
-                visited[nr][nc] = True      
+                visited[nr][nc] = True
+    
+    return 0
                 
                 
 def tsp(dists, visited, indegree, seq_edges, curr, v):
     k = len(indegree)
-
+    
+    # 모든 패널 활성화한 경우
     if v == (1 << k) - 1:
         return 0
-
+    
+    # 이미 같은 경로로 방문한 경우
     if visited[curr][v] != INF:
         return visited[curr][v]
-
+    
     for i in range(k):
-        if indegree[i] != 0:
-            continue
-
+        # 이미 활성화한 패널이면 건너뛰기
         if v & (1 << i):
             continue
-
+            
+        # 안전 순서 지켜지지 않은 경우 건너뛰기
+        if indegree[i] != 0:
+            continue
+            
         nv = v | (1 << i)
-
+        
         # i번째 패널 활성화
         for next_panel in seq_edges[i]:
             indegree[next_panel] -= 1
-
-        # 다음 패널부터 남은 패널을 모두 방문하는 최소 비용
-        cost = dists[curr][i] + tsp(
-            dists, visited, indegree, seq_edges, i, nv
-        )
-
+            
+        # 최소 시간 갱신
+        cost = tsp(dists, visited, indegree, seq_edges, i, nv) + dists[curr][i]
         visited[curr][v] = min(visited[curr][v], cost)
-
-        # 진입 차수 복구
+        
+        # 활성화한 패널 복구
         for next_panel in seq_edges[i]:
             indegree[next_panel] += 1
-
+    
     return visited[curr][v]
     
 
