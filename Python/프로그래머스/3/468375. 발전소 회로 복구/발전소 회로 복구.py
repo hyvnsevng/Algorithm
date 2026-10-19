@@ -1,5 +1,4 @@
 from collections import deque
-from heapq import heappop, heappush
 
 DR = [1, -1, 0, 0]
 DC = [0, 0, 1, -1]
@@ -22,7 +21,7 @@ def get_dist_same_floor(sr, sc, er, ec, grid, n, m):
                 q.append((nr, nc, dist + 1))
                 visited[nr][nc] = True
     
-    return 0
+    return INF
                 
                 
 def tsp(dists, visited, prereq, curr, v):
