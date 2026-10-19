@@ -26,31 +26,33 @@ def get_dist_same_floor(sr, sc, er, ec, grid, n, m):
                 
 def tsp(dists, visited, prereq, curr, v):
     k = len(prereq)
+    full_mask = (1 << k) - 1
     
-    # 모든 패널 활성화한 경우
-    if v == (1 << k) - 1:
-        return 0
-    
-    # 이미 같은 경로로 방문한 경우
-    if visited[curr][v] != INF:
-        return visited[curr][v]
-    
-    for i in range(k):
-        # 이미 활성화한 패널이면 건너뛰기
-        if v & (1 << i):
-            continue
+    dp = [[INF] * k for _ in range(1 << k)]
+    dp[0][0] = 0
+    for mask in range(full_mask):
+        for curr in range(k):
+            # 현재 방문 상태에 도달할 수 없는 경우 건너뛰기
+            if dp[mask][curr] == INF:
+                continue
             
-        # 안전 순서 지켜지지 않은 경우 건너뛰기
-        if (v & prereq[i] != prereq[i]):
-            continue
-            
-        nv = v | (1 << i)
-            
-        # 최소 시간 갱신
-        cost = tsp(dists, visited, prereq, i, nv) + dists[curr][i]
-        visited[curr][v] = min(visited[curr][v], cost)
+            # 다음으로 활성화할 패널 선택
+            for nxt in range(k):
+                bit = 1 << nxt
+                
+                # 이미 활성화한 패널이면 건너뛰기
+                if mask & bit:
+                    continue
+                
+                # 선행 패널이 활성화되지 않은 경우 건너뛰기
+                if (mask & prereq[nxt]) != prereq[nxt]:
+                    continue
+                
+                nxt_mask = mask | bit
+                cost = dp[mask][curr] + dists[curr][nxt]
+                dp[nxt_mask][nxt] = min(dp[nxt_mask][nxt], cost)
     
-    return visited[curr][v]
+    return min(dp[full_mask])
     
 
 def solution(h, grid, panels, seqs):
