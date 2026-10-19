@@ -24,7 +24,7 @@ def get_dist_same_floor(sr, sc, er, ec, grid, n, m):
     return INF
                 
                 
-def tsp(dists, visited, prereq, curr, v):
+def tsp(dists, prereq):
     k = len(prereq)
     full_mask = (1 << k) - 1
     
@@ -97,6 +97,5 @@ def solution(h, grid, panels, seqs):
         prereq[curr - 1] |= 1 << (prev - 1)
     
     # 4. tsp로 최소 시간 구하기
-    visited = [[INF] * (1 << k) for _ in range(k)]    # [현재 위치][방문 상황]
-    return tsp(dists, visited, prereq, 0, 0)
+    return tsp(dists, prereq)
     
