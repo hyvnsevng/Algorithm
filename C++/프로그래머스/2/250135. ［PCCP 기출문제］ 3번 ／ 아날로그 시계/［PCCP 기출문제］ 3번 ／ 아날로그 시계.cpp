@@ -3,7 +3,7 @@ int convertToSec(int h, int m, int s) {
 }
 
 int countAlarm(int t) {
-    return (t * 59 / 3600) + (t * 719 / 43200) - (2 ? t >= 12 * 3600 : 1);
+    return (t * 59 / 3600) + (t * 719 / 43200) - (t >= 12 * 3600 ? 2 : 1);
 }
 
 int solution(int h1, int m1, int s1, int h2, int m2, int s2) {
